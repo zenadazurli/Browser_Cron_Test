@@ -1,0 +1,45 @@
+name: Test Browser Use Cloud
+
+on:
+  workflow_dispatch:    # Puoi avviarlo manualmente
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install browser-use
+        run: pip install browser-use
+        
+      - name: Run login test
+        env:
+          BROWSER_USE_API_KEY: ${{ secrets.BROWSER_USE_API_KEY }}
+        run: |
+          python -c "
+          import subprocess, time, re
+          
+          API_KEY = '${{ secrets.BROWSER_USE_API_KEY }}'
+          
+          subprocess.run(f'browser-use config set api_key {API_KEY}', shell=True)
+          subprocess.run('browser-use cloud connect', shell=True)
+          subprocess.run('browser-use open https://www.easyhits4u.com/logon/', shell=True)
+          time.sleep(5)
+          
+          subprocess.run('browser-use keys \"Tab\"', shell=True)
+          subprocess.run('browser-use type \"sandrominori50+ulugarecexisa@gmail.com\"', shell=True)
+          time.sleep(1)
+          
+          subprocess.run('browser-use keys \"Tab\"', shell=True)
+          subprocess.run('browser-use type \"DDnmVV45!!\"', shell=True)
+          time.sleep(1)
+          
+          subprocess.run('browser-use keys \"Enter\"', shell=True)
+          time.sleep(8)
+          
+          result = subprocess.run('browser-use cookies get', shell=True, capture_output=True, text=True)
+          
+          sesids = re.search(r\"'sesids': '([^']+)'\", result.stdout)
+          user_id = re.search(r\"'user_id': '([^']+)'\", result.stdout)
+          
+          print(f'✅ sesids = {sesids.group(1) if sesids else None}')
+          print(f'✅ user_id = {user_id.group(1) if user_id else None}')
+          "
