@@ -28,7 +28,7 @@ jobs:
           sleep 1
           
           browser-use keys "Enter"
-          sleep 60
+          sleep 20
           
           echo "=== PRIMO TENTATIVO ==="
           browser-use eval 'window.location.href'
