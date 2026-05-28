@@ -1,7 +1,7 @@
 name: Test Browser Use Cloud
 
 on:
-  workflow_dispatch:    # Puoi avviarlo manualmente
+  workflow_dispatch:
 
 jobs:
   test:
@@ -14,32 +14,34 @@ jobs:
         env:
           BROWSER_USE_API_KEY: ${{ secrets.BROWSER_USE_API_KEY }}
         run: |
-          python -c "
-          import subprocess, time, re
+          echo "🚀 Test avviato"
           
-          API_KEY = '${{ secrets.BROWSER_USE_API_KEY }}'
+          browser-use config set api_key $BROWSER_USE_API_KEY
+          browser-use cloud connect
+          browser-use open https://www.easyhits4u.com/logon/
+          sleep 5
           
-          subprocess.run(f'browser-use config set api_key {API_KEY}', shell=True)
-          subprocess.run('browser-use cloud connect', shell=True)
-          subprocess.run('browser-use open https://www.easyhits4u.com/logon/', shell=True)
-          time.sleep(5)
+          echo "📝 Inserimento email..."
+          browser-use keys "Tab"
+          browser-use type "sandrominori50+ulugarecexisa@gmail.com"
+          sleep 1
           
-          subprocess.run('browser-use keys \"Tab\"', shell=True)
-          subprocess.run('browser-use type \"sandrominori50+ulugarecexisa@gmail.com\"', shell=True)
-          time.sleep(1)
+          echo "📝 Inserimento password..."
+          browser-use keys "Tab"
+          browser-use type "DDnmVV45!!"
+          sleep 1
           
-          subprocess.run('browser-use keys \"Tab\"', shell=True)
-          subprocess.run('browser-use type \"DDnmVV45!!\"', shell=True)
-          time.sleep(1)
+          echo "🔑 Invio login..."
+          browser-use keys "Enter"
+          sleep 10
           
-          subprocess.run('browser-use keys \"Enter\"', shell=True)
-          time.sleep(8)
+          echo ""
+          echo "=== URL CORRENTE ==="
+          browser-use eval 'window.location.href'
           
-          result = subprocess.run('browser-use cookies get', shell=True, capture_output=True, text=True)
+          echo ""
+          echo "=== COOKIE ==="
+          browser-use cookies get
           
-          sesids = re.search(r\"'sesids': '([^']+)'\", result.stdout)
-          user_id = re.search(r\"'user_id': '([^']+)'\", result.stdout)
-          
-          print(f'✅ sesids = {sesids.group(1) if sesids else None}')
-          print(f'✅ user_id = {user_id.group(1) if user_id else None}')
-          "
+          echo ""
+          echo "=== FINE ==="
