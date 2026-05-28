@@ -14,34 +14,31 @@ jobs:
         env:
           BROWSER_USE_API_KEY: ${{ secrets.BROWSER_USE_API_KEY }}
         run: |
-          echo "🚀 Test avviato"
-          
           browser-use config set api_key $BROWSER_USE_API_KEY
           browser-use cloud connect
           browser-use open https://www.easyhits4u.com/logon/
           sleep 5
           
-          echo "📝 Inserimento email..."
           browser-use keys "Tab"
           browser-use type "sandrominori50+ulugarecexisa@gmail.com"
           sleep 1
           
-          echo "📝 Inserimento password..."
           browser-use keys "Tab"
           browser-use type "DDnmVV45!!"
           sleep 1
           
-          echo "🔑 Invio login..."
           browser-use keys "Enter"
-          sleep 10
+          sleep 5
           
-          echo ""
-          echo "=== URL CORRENTE ==="
+          echo "=== PRIMO TENTATIVO ==="
           browser-use eval 'window.location.href'
           
-          echo ""
+          echo "=== SECONDO TENTATIVO (se warning) ==="
+          browser-use keys "Enter"
+          sleep 8
+          
+          echo "=== URL FINALE ==="
+          browser-use eval 'window.location.href'
+          
           echo "=== COOKIE ==="
           browser-use cookies get
-          
-          echo ""
-          echo "=== FINE ==="
